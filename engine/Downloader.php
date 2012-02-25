@@ -46,7 +46,9 @@ class Downloader {
 		# At first
 		$File = array();
 		# Downloading
+		echo date(DATE_ATOM, mktime(0, 0, 0, 7, 1, 2000));
 		print "Downloading $this->LINK<br>";
+		echo date(DATE_ATOM, mktime(0, 0, 0, 7, 1, 2000));
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $this->LINK);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 300);
@@ -54,6 +56,7 @@ class Downloader {
 		$st = curl_exec($ch);
 		curl_close($ch);
 		print "Downloaded<br>";
+		echo date(DATE_ATOM, mktime(0, 0, 0, 7, 1, 2000));
 		# Writing to tempfile
 		$tmpfname = tempnam("/tmp", "FOO");
 		$handle = fopen($tmpfname, "w");
@@ -62,7 +65,7 @@ class Downloader {
 		@fclose($tmpfname);
 		# Checking
 		$size = filesize($tmpfname);
-		if ($size > 5*1024*1024) {
+		if ($size > $this->MAX_FILE_SIZE) {
 			print ("Too big file");
 		}
 		$sizes = getimagesize($tmpfname);
