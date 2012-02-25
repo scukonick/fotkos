@@ -51,7 +51,6 @@ class Downloader {
 		curl_setopt($ch, CURLOPT_URL, $this->LINK);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 300);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		preg_match("/\.[^.]+$/",$this->LINK,$matches);
 		$st = curl_exec($ch);
 		curl_close($ch);
 		print "Downloaded<br>";
@@ -59,21 +58,39 @@ class Downloader {
 		$tmpfname = tempnam("/tmp", "FOO");
 		$handle = fopen($tmpfname, "w");
 		fwrite($handle, $st);
-		print($tmpfname);
+		#print($tmpfname);
 		@fclose($tmpfname);
+		# Checking
+		$size = filesize($tmpfname);
+		if ($size > 5*1024*1024) {
+			print ("Too big file");
+		}
+		$sizes = getimagesize($tmpfname);
+		$file_mime = $sizes['mime'];
+		if ( in_array($file_mime,$this->ALLOWED_TYPES ) ){
+			if ($file_mime == $this->ALLOWED_TYPES[0]){
+				$real_ext = $this->ALLOWED_FILES[0];
+			} else {
+				$real_ext = $this->ALLOWED_FILES[1];
+			}
+		} else {
+			$Pict = new Picture($this->LINK, '--','--',99);
+			$OutputPicts[] = $Pict;
+			unlink($tmpfname);
+			return $OutputPicts;
+		}
 		# Renaming
 		$md5 = md5_file($tmpfname);
 		$day = date("d");
 		$month = date("m");
 		$year = date("y");
 		$this->checkDir($day,$month,$year);
-		$newfilename = "$year/$month/$day/".$this->USERID.$md5.$matches[0];
+		$newfilename = "$year/$month/$day/".$this->USERID.$md5.'.'.$real_ext;
 		$fileuri = $this->UPLOAD_DIR.$newfilename;
 		$cacheuri = $this->CACHE_DIR.$newfilename;
 		$File['destination'] = $_SERVER['DOCUMENT_ROOT'].$fileuri;
 		rename($tmpfname,$File['destination']);
 		# Write to base
-		$sizes = getimagesize($File['destination']);
 		$c = $this->DB->Pictures;
 		$userid = new MongoID($this->USERID);
 		$pictureup = array("Uploaded" => new MongoDate(),"filename" => $newfilename, "servername" => $this->SERVERNAME, "link" => $this->LINK, "userid" => $this->USERID,'width' => $sizes[0], 'height' => $sizes[1]);
