@@ -1,0 +1,35 @@
+<div class='mainpagewrapper'>
+	<div class='forms'>
+		<div class='upload'>
+			<span class='big'>Загрузите фото с компьютера</span><br><br>
+				<form method='POST' action='/' enctype="multipart/form-data" name="form">
+					<input type="file" name="files[]" id="file-field" multiple="true" max="20" value="Выбрать"/>
+					<input type="submit" value="Загрузить!"/>
+				</form>
+		</div>
+		<div class='upload'>
+			<span class='big'>Скачайте фото с интернета</span><br><br>
+				<form method='POST' action='/' name="form">
+					<input type="text" name="link" size="30" value="Введите URL"/>
+					<input type="submit" value="Загрузить!"/>
+					<input type="hidden" name='bylink'  value="Загрузить!"/>
+				</form>
+		</div>
+	</div>
+	<div class='info'>
+			<span class='big'>Где это я?</span><br>
+			Вы находитесь на Фоткозагружалке - удобном хостинге картинок, фотографий и прочих изображений.
+	</div>
+	<div class='info'>
+			<span class='big'>Зачем это нужно?</span><br>
+			Для того, чтобы Вы могли просто и быстро выложить какие-либо фотографии или картинки в интернет, чтобы поделиться ими со всем миром.
+	</div>
+	<div class='info'>
+			<span class='big'>Как загружать?</span><br>
+			Достаточно просто выбрать картинку, воспользовавшись меню в верху страницы и нажать загрузить! Можно выбрать сразу несколько картинок. Когда они загрузятся, вы получите ссылки на них, которые можно будет отправить своим друзьям или запостить на форуме. Фактом загрузки вы подтверждаете согласие с <a href='/rules/'>правилами.</a>
+	</div>
+	<div class='info'>
+			<span class='big'>Как связаться?</span><br>
+			Вы всегда можете написать нам на электропочту: <a href="mailto:nobody@nowhere.com">nobody@nowhere.com</a>.
+	</div>
+</div>

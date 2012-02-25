@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+<head>
+<title>Uploader</title>
+<meta charset="utf8">
+<style>
+* {
+	margin: 0px;
+	padding: 0px;
+}
+nav {
+	display: block;
+	left: 0px;
+	width: 100%;
+	height: 50px;
+	background: url('/menu.png');
+	-webkit-background-size: 100%;
+	-moz-background-size: 100%;
+}
+nav ul {
+	list-style: none;
+	display: table;
+	height: 100%;
+}
+nav ul li {
+	display: table-cell;
+	height: 100%;
+}
+
+nav ul li a {
+	display: block;
+	width: 140px;
+	height: 100%;
+	font-size: 14px;
+	text-decoration: none;
+	color: #000;
+	text-align: center;
+	line-height: 50px;
+}
+nav ul li a:hover {
+	color: #fff;
+}
+div.menuwrapper {
+}
+body {
+	background: #eeeeee;
+}
+div.bigpictwrapper {
+	text-align: center;
+	padding: 20px;
+	color: #444;	
+}
+div.bigpictwrapper a {
+	color: #333;
+}
+div.bigpictwrapper a:visited {
+	color: #333;
+}
+div.bigpictwrapper div.medpictwrapper {
+	margin: auto;
+	width: 600px;
+	text-align: left;
+}
+div.bigpictwrapper div.medpictwrapper div.littlepictwrap {
+	border: 0px;
+	display: inline-block;
+	overflow: auto;
+}
+div.bigpictwrapper div.medpictwrapper div.littlepictwrap a.prevs{
+	display: block;
+}
+div.bigpictwrapper div#needpic {
+	height: 1px;
+}
+div.mainpagewrapper {
+	width: 600px;
+	text-align: left;
+	margin: auto;
+	display: table;
+	overflow: auto;
+}
+div.mainpagewrapper div.forms div.upload {
+	margin: 20px;
+	text-align: center;
+}
+div.mainpagewrapper div.forms div.upload span.big{
+	font-size: 30px;
+}
+div#pictlinks {
+	text-align: center;
+	font-size: 10px;
+	overflow: auto;
+	width: 600px;
+}
+div.row {
+}
+div.row p.left, p.right{
+	float: left;
+}
+div.row p.left{
+	text-align: left;
+	width: 32%;
+}
+div.row p.right{
+	text-align: right;
+}
+input.link {
+	width: 400px;
+	font-size: 10px;
+}
+div.settings {
+	overflow: auto;
+	text-align: left;
+	margin: 5px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 500px;
+}
+span.big {
+	font-size: 22px;
+	color: #222;
+	line-height: 35px;
+}
+
+div.bigpictwrapper div.info {
+	text-align: left;
+	margin-left: auto;
+	margin-right: auto;
+	width: 500px;
+}
+div.bigpictwrapper div.info ul{
+	list-style: none;
+}
+</style>
+<script lang='javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js'></script>
+<script lang='javascript'>
+
+function getPhotos(from,limit){
+	$.get('/api/getPictures?from='+from+'&limit='+limit,function(data){
+		//console.log('getPhotos('+from+','+limit+')');
+		//console.log(data);
+		if (data == 0 ){
+			noPicsLeft = 1;
+		} else {
+			$('.medpictwrapper').append(data);
+		}
+	});
+}
+var w_height;
+var d_height;
+var s_top;
+var noPicsLeft = 0;
+
+$(document).ready(function (){
+	// Gallery
+	if ($('#gallery').length > 0){
+		w_height = document.body.clientHeight;
+		d_height = document.documentElement.clientHeight;
+		s_top = document.body.scrollTop;
+		var from = 0;
+		var limit;
+		limit = Math.round ( ( (d_height / 150 ) + 2 ) * 5 );
+		getPhotos(from,limit);
+		from = from + limit;
+		limit = 30;
+		$(window).scroll(function () { 
+			w_height = document.body.clientHeight;
+			d_height = document.documentElement.clientHeight;
+			s_top = document.body.scrollTop;
+			if ( s_top + d_height >= w_height * 0.8 && noPicsLeft == 0){
+				getPhotos(from, limit);
+				//console.log('From: '+from+'; Limit: '+limit);
+				from = from + limit;
+			}
+		})
+//		$('#gallery').load('/api/getPictures?from=0&limit=20');	
+//		$(window).resize(updateDisplay).scroll(updateDisplay);
+	}
+});
+</script>
+</head>
+<body>
+<nav>
+	<div align='center' id='menuwrapper'>
+	<ul>
+		<li><a href='/rules/'>Правила</a></li>
+		<li>
+			<form method='POST' action='/' enctype="multipart/form-data" name="form">
+				<input type="file" name="files[]" id="file-field" multiple="true" max="20" value="Выбрать"/>
+				<input type="submit" value="Загрузить!"/>
+			</form>
+		</li>
+		<li><a href='/collection/'>Мои загрузки</a></li>
+		<li><a href='/settings/'>Настройки</a></li>
+	</ul>
+	</div>
+</nav>
+<div id='mainwrapper'>
