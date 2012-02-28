@@ -46,17 +46,25 @@ class Downloader {
 		# At first
 		$File = array();
 		# Downloading
-		echo date(DATE_ATOM, mktime(0, 0, 0, 7, 1, 2000));
+		echo date(DATE_ATOM);
+		print "<br>";
 		print "Downloading $this->LINK<br>";
-		echo date(DATE_ATOM, mktime(0, 0, 0, 7, 1, 2000));
+		echo date(DATE_ATOM);
+		print "<br>";
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $this->LINK);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 300);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		print date(DATE_ATOM);
+		print "<br>";
 		$st = curl_exec($ch);
 		curl_close($ch);
+		print date(DATE_ATOM);
+		print "<br>";
 		print "Downloaded<br>";
-		echo date(DATE_ATOM, mktime(0, 0, 0, 7, 1, 2000));
+		echo date(DATE_ATOM);
+		print "<br>";
 		# Writing to tempfile
 		$tmpfname = tempnam("/tmp", "FOO");
 		$handle = fopen($tmpfname, "w");

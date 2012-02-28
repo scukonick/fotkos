@@ -176,6 +176,14 @@ $(document).ready(function (){
 //		$('#gallery').load('/api/getPictures?from=0&limit=20');	
 //		$(window).resize(updateDisplay).scroll(updateDisplay);
 	}
+	// URL form
+	if ($('#link').length > 0 ) {
+		$('#link').focus(function(){
+			if ($(this).val() == 'Введите URL'){
+				$(this).val('');
+			}
+		})
+	}
 });
 </script>
 </head>

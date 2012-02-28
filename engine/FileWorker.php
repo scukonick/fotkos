@@ -87,6 +87,11 @@ class FileWorker {
 				break;
 			} else {
 ##				$this->logger->log($File['name']." all is ok", PEAR_LOG_DEBUG);
+				$sizes = getimagesize($File['tmp_name']);
+				if (! in_array($sizes['mime'], $this->ALLOWED_TYPES)){
+					$File['Error'] = "Неподдеживаемый тип.";
+				}
+				$File['mime'] = $sizes['mime'];
 				$File['Error'] = 0;
 			}
 			$OutputFiles[] = $File;
@@ -105,18 +110,27 @@ class FileWorker {
 		}
 	}
 	function workFiles($InputFiles){
-#		$this->logger->log("Working with files", PEAR_LOG_DEBUG);
 		$OutputPicts = array();
 		foreach ($InputFiles as $File){
 			if ($File['Error'] === 0 ){
-				// make md5
-				preg_match("/\.[^.]+$/",$File['name'],$matches);
+				// extension
+				switch($File['mime']) {
+					case 'image/png':
+						$extension = 'png';
+						break;
+					case 'image/jpeg':
+						$extension = 'jpeg';
+						break;
+				}
+				// md5
 				$md5 = md5_file($File['tmp_name']);
+				// directory and date
 				$day = date("d");
 				$month = date("m");
 				$year = date("y");
 				$this->checkDir($day,$month,$year);
-				$newfilename = "$year/$month/$day/".$this->USERID.$md5.$matches[0];
+				// new names
+				$newfilename = "$year/$month/$day/".$this->USERID.$md5.'.'.$extension;
 				$fileuri = $this->UPLOAD_DIR.$newfilename;
 				$cacheuri = $this->CACHE_DIR.$newfilename;
 				$File['destination'] = $_SERVER['DOCUMENT_ROOT'].$fileuri;
