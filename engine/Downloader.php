@@ -74,7 +74,8 @@ class Downloader {
 		# Checking
 		$size = filesize($tmpfname);
 		if ($size > $this->MAX_FILE_SIZE) {
-			print ("Too big file");
+			$Pict = new Picture($this->LINK, '--','--','Слишком большая картинка!');
+			$OutputPicts[] = $Pict;
 		}
 		$sizes = getimagesize($tmpfname);
 		$file_mime = $sizes['mime'];
@@ -85,7 +86,7 @@ class Downloader {
 				$real_ext = $this->ALLOWED_FILES[1];
 			}
 		} else {
-			$Pict = new Picture($this->LINK, '--','--',99);
+			$Pict = new Picture($this->LINK, '--','--','Не поддерживаемый тип!');
 			$OutputPicts[] = $Pict;
 			unlink($tmpfname);
 			return $OutputPicts;

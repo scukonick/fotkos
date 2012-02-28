@@ -17,4 +17,10 @@
 <? } else { ?>
 <? } ?>
 </div>	
+<? if (count($ErrPictures) > 0){ ?>
+	При загрузке следующих картинок произошли ошибки:<br>
+	<? foreach ($ErrPictures as $Picture){ ?>
+		<?= $Picture->ORIGNAME ?>: <?= $Picture->ERROR ?><br>
+	<? } ?>
+<? } ?>
 </div>	
